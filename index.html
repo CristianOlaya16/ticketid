@@ -2,26 +2,22 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <title>Consulta Ticket</title>
+  <title>Consulta de Ticket</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 40px;
-      background-color: #fefefe;
-      max-width: 700px;
+      background-color: #fafafa;
+      max-width: 800px;
       margin: auto;
     }
-    h2 {
-      color: #333;
-    }
+    h2 { color: #333; }
     input, button {
       padding: 10px;
       font-size: 16px;
       margin-right: 10px;
     }
-    button {
-      cursor: pointer;
-    }
+    button { cursor: pointer; }
     pre {
       background: #f4f4f4;
       padding: 15px;
@@ -32,8 +28,8 @@
   </style>
 </head>
 <body>
-  <h2>🔎 Consulta de Soporte</h2>
-  <input id="ticket" placeholder="Ej: TK0009" />
+  <h2>🔍 Consulta de Soporte Técnico</h2>
+  <input id="ticket" placeholder="Ej: TK0012" />
   <button onclick="consultar()">Buscar</button>
   <pre id="resultado"></pre>
 
@@ -55,20 +51,26 @@
       });
 
       if (!res.ok) {
-        resultado.textContent = "No se encontró el ticket o hubo un error.";
+        resultado.textContent = "⚠️ No se encontró el ticket o hubo un error.";
         return;
       }
 
       const data = await res.json();
 
       resultado.textContent = `
-👤 Cliente:         ${data.nombre_completo}
-📧 Correo:          ${data.correo}
-📞 Teléfono:        ${data.telefono}
+👤 Cliente:
+  ${data.nombre_completo}
+  📞 ${data.telefono}
+  📧 ${data.correo}
 
-🛠️ Descripción:    ${data.descripcion_falla}
-📅 Fecha Inicio:    ${data.fecha_inicio}
-🕒 Hora Inicio:     ${data.hora_inicio}`.trim();
+🏠 Dirección:
+  ${data.direccion}
+
+🛠️ Soporte:
+  Descripción: ${data.descripcion_falla}
+  Fecha Inicio: ${data.fecha_inicio}
+  Hora Inicio: ${data.hora_inicio}
+      `.trim();
     }
   </script>
 </body>

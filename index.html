@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Consulta Ticket</title>
+  <style>
+    body { font-family: Arial; padding: 40px; }
+    input, button { padding: 10px; font-size: 16px; }
+    pre { background: #f4f4f4; padding: 15px; margin-top: 20px; }
+  </style>
+</head>
+<body>
+  <h2>Consulta de Soporte</h2>
+  <input id="ticket" placeholder="Ej: TK0009" />
+  <button onclick="consultar()">Buscar</button>
+  <pre id="resultado"></pre>
+
+  <script>
+    async function consultar() {
+      const id = document.getElementById("ticket").value.trim();
+      if (!id) {
+        document.getElementById("resultado").textContent = "Por favor ingresa un ID de ticket.";
+        return;
+      }
+
+      const res = await fetch("https://prod-37.westeurope.logic.azure.com:443/workflows/aff5b7a10b534bfcb5dbae98bcb20fd4/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=GDtAddgFTVBEfgHzf-Iv0MGc5afpHF7TgEOCnJvIZxg", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_ticket: id })
+      });
+
+      if (!res.ok) {
+        document.getElementById("resultado").textContent = "No se encontró el ticket o hubo un error.";
+        return;
+      }
+
+      const data = await res.json();
+      document.getElementById("resultado").textContent = `
+ID Cliente:         ${data.id_cliente}
+Descripción Falla:  ${data.descripcion_falla}
+Fecha de Inicio:    ${data.fecha_inicio}
+Hora de Inicio:     ${data.hora_inicio}`.trim();
+    }
+  </script>
+</body>
+</html>

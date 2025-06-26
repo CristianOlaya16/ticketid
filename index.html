@@ -4,13 +4,35 @@
   <meta charset="UTF-8" />
   <title>Consulta Ticket</title>
   <style>
-    body { font-family: Arial; padding: 40px; }
-    input, button { padding: 10px; font-size: 16px; }
-    pre { background: #f4f4f4; padding: 15px; margin-top: 20px; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background-color: #fefefe;
+      max-width: 700px;
+      margin: auto;
+    }
+    h2 {
+      color: #333;
+    }
+    input, button {
+      padding: 10px;
+      font-size: 16px;
+      margin-right: 10px;
+    }
+    button {
+      cursor: pointer;
+    }
+    pre {
+      background: #f4f4f4;
+      padding: 15px;
+      margin-top: 20px;
+      white-space: pre-wrap;
+      border-left: 4px solid #4CAF50;
+    }
   </style>
 </head>
 <body>
-  <h2>Consulta de Soporte</h2>
+  <h2>🔎 Consulta de Soporte</h2>
   <input id="ticket" placeholder="Ej: TK0009" />
   <button onclick="consultar()">Buscar</button>
   <pre id="resultado"></pre>
@@ -18,8 +40,11 @@
   <script>
     async function consultar() {
       const id = document.getElementById("ticket").value.trim();
+      const resultado = document.getElementById("resultado");
+      resultado.textContent = "";
+
       if (!id) {
-        document.getElementById("resultado").textContent = "Por favor ingresa un ID de ticket.";
+        resultado.textContent = "Por favor ingresa un ID de ticket.";
         return;
       }
 
@@ -30,16 +55,20 @@
       });
 
       if (!res.ok) {
-        document.getElementById("resultado").textContent = "No se encontró el ticket o hubo un error.";
+        resultado.textContent = "No se encontró el ticket o hubo un error.";
         return;
       }
 
       const data = await res.json();
-      document.getElementById("resultado").textContent = `
-ID Cliente:         ${data.id_cliente}
-Descripción Falla:  ${data.descripcion_falla}
-Fecha de Inicio:    ${data.fecha_inicio}
-Hora de Inicio:     ${data.hora_inicio}`.trim();
+
+      resultado.textContent = `
+👤 Cliente:         ${data.nombre_completo}
+📧 Correo:          ${data.correo}
+📞 Teléfono:        ${data.telefono}
+
+🛠️ Descripción:    ${data.descripcion_falla}
+📅 Fecha Inicio:    ${data.fecha_inicio}
+🕒 Hora Inicio:     ${data.hora_inicio}`.trim();
     }
   </script>
 </body>
